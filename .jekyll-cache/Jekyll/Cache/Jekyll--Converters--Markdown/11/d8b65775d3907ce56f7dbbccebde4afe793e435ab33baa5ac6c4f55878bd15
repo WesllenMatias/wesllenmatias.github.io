@@ -1,0 +1,41 @@
+I"S<p>Neste post vou mostrar como utilizar o bot telegram que desenvolvi para poder capturar o status atual da sefaz, para ter de forma rapida e na mão o status da Sefaz quando for necessário.</p>
+
+<p>Para rodar o scrip como serviço em seu servidor siga os passos abaixo:</p>
+
+<ul>
+  <li>Instale o jq e o lynx:</li>
+</ul>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>apt-get <span class="nb">install </span>jq <span class="nt">-y</span>
+
+apt-get <span class="nb">install </span>lynx <span class="nt">-y</span>
+</code></pre></div></div>
+
+<ul>
+  <li>Clone o repositório:</li>
+</ul>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git clone https://github.com/WesllenMatias/sefaz.git
+</code></pre></div></div>
+<ul>
+  <li>Abra o sefaz.sh e altere a variavel bot_token e adicione o token do seu bot telegram:</li>
+</ul>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">bot_token</span><span class="o">=</span><span class="s1">'[add aqui o token do seu bot]'</span>
+</code></pre></div></div>
+<ul>
+  <li>Acesse a pasta sefaz e dê permissão de execução aos arquivos ShellBot.sh e sefaz.sh:</li>
+</ul>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">chmod</span> +x sefaz.sh
+
+<span class="nb">chmod</span> +x ShellBot.sh
+</code></pre></div></div>
+<ul>
+  <li>Caso queira deixar ele rodando direto na máquina basta executar o comando abaixo:</li>
+</ul>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="nb">nohup </span>sefaz.sh <span class="o">&amp;&amp;</span>
+</code></pre></div></div>
+<p><strong>OBS: sefaz.sh e ShellBot.sh devem está no mesmo diretório.</strong></p>
+:ET

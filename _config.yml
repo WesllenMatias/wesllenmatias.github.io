@@ -1,0 +1,14 @@
+logo: /assets/img/logo.png
+theme: jekyll-theme-minimal
+title: Wesllen Matias
+description: Analista de Sistemas, Sysadmin, Viciado em Linux, Novas Tecnologias, Shell Script e Python agora! =)
+show_downloads: false
+google_analytics: 
+baseurl: "" # the subpath of your site, e.g. /blog
+url: "wesllen.com.br" # the base hostname & protocol for your site, e.g. http://example.com
+twitter_username: WesllenMatias
+github_username:  WesllenMatias
+author: Wesllen Matias
+# Build settings
+#plugins:
+#  - jekyll-feed
