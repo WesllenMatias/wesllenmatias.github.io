@@ -1,4 +1,4 @@
-I"S<p>Neste post vou mostrar como utilizar o bot telegram que desenvolvi para poder capturar o status atual da sefaz, para ter de forma rapida e na mão o status da Sefaz quando for necessário.</p>
+I"�<p>Neste post vou mostrar como utilizar o bot telegram que desenvolvi para poder capturar o status atual da sefaz, para ter de forma rapida e na mão o status da Sefaz quando for necessário.</p>
 
 <p>Para rodar o scrip como serviço em seu servidor siga os passos abaixo:</p>
 
@@ -38,4 +38,7 @@ apt-get <span class="nb">install </span>lynx <span class="nt">-y</span>
 <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="nb">nohup </span>sefaz.sh <span class="o">&amp;&amp;</span>
 </code></pre></div></div>
 <p><strong>OBS: sefaz.sh e ShellBot.sh devem está no mesmo diretório.</strong></p>
+
+<h2 id="resultado">Resultado:</h2>
+<p><img src="/assets/img/tela-sefaz.png" alt="Mensagem do Bot" /></p>
 :ET

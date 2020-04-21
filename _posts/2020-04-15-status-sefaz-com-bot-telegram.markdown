@@ -42,3 +42,6 @@ chmod +x ShellBot.sh
     nohup sefaz.sh &&
 ```
 **OBS: sefaz.sh e ShellBot.sh devem está no mesmo diretório.**
+
+## Resultado:
+![Mensagem do Bot](/assets/img/tela-sefaz.png)
