@@ -6,6 +6,8 @@ categories: bot-telegram
 tags: telegram
 ---
 
+![nfe-icn](https://user-images.githubusercontent.com/46201054/56322970-d7553e80-6140-11e9-8c80-50ed7f5fc6ff.png)
+
 Neste post vou mostrar como utilizar o bot telegram que desenvolvi para poder capturar o status atual da sefaz, para ter de forma rapida e na mão o status da Sefaz quando for necessário.
 
 
