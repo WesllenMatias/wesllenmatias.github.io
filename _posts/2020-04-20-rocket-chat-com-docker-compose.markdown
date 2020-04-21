@@ -12,7 +12,7 @@ Rocket Chat no Docker.
 
 ## Etapas da configuracao:
 
-1. Criar certificado digital SSL.
+### Criar certificado digital SSL.
 
 ```shell
 touch /etc/ngnix/certificate.key
@@ -22,13 +22,13 @@ touch /etc/ngnix/certificate.crt
 sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/nginx/certificate.key -out /etc/nginx/certificate.crt
 ```
 
-2. Instalar servidor ngnix.
+### Instalar servidor ngnix.
 
 ```shell
 sudo apt-get install nginx
 ```
 
-2.1 Clonar o repositorio com docker-compose.yml OBS:(para dentro da pasta /var/www/ isso é importante).
+### Clonar o repositorio com docker-compose.yml OBS:(para dentro da pasta /var/www/ isso é importante).
 
 ```shell
 cd /var/www/
@@ -36,13 +36,13 @@ cd /var/www/
 git clone https://github.com/WesllenMatias/rocket.chat.git
 ```
 
-3. Instalar o docker.
+### Instalar o docker.
 
 ```shell
 wget -qO- https://get.docker.com/ | sh
 ```
 
-4. Instalar o docker-compose e dar permissao de execucao a ele.
+### Instalar o docker-compose e dar permissao de execucao a ele.
 
 ```shell
 sudo curl -L "https://github.com/docker/compose/releases/download/1.25.4/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
@@ -50,9 +50,9 @@ sudo curl -L "https://github.com/docker/compose/releases/download/1.25.4/docker-
 sudo chmod +x /usr/local/bin/docker-compose
 ```
 
-5. Configurar ngnix com o certificado.
+## Configurar ngnix com o certificado.
 
-5.1. Altere a permissao do arquivo do certificado.
+### Altere a permissao do arquivo do certificado.
 
 ```shell
 sudo chmod 400 /etc/nginx/certificate.key
@@ -60,13 +60,13 @@ sudo chmod 400 /etc/nginx/certificate.key
 sudo openssl dhparam -out /etc/nginx/dhparams.pem 2048
 ```
 
-5.2. Agora abra o arquivo de configuracao do NGNIX.( OBS? Altere o server_name e o proxy_pass com o DNS de sua preferencia )
+### Agora abra o arquivo de configuracao do NGNIX.( OBS? Altere o server_name e o proxy_pass com o DNS de sua preferencia )
 
 ```shell
 sudo nano /etc/nginx/sites-available/default
 ```
 
-5.3. Apague as configuracoes atuais e cole as abaixo.
+### Apague as configuracoes atuais e cole as abaixo.
 
 ```json
     server {
@@ -99,20 +99,20 @@ sudo nano /etc/nginx/sites-available/default
     }
 ```
 
-5.4. Reinicie o NGNIX.
+### Reinicie o NGNIX.
 
 ```
 sudo service nginx configtest && sudo service nginx restart
 ```
 
-6. Crie as pastas onde vão ficar os volumes dos containers.
+### Crie as pastas onde vão ficar os volumes dos containers.
 
 ```
 sudo mkdir -p /var/www/rocket.chat/data/runtime/db
 sudo mkdir -p /var/www/rocket.chat/data/dump
 ```
 
-7. Agora va ate a pasta /var/www/rocket.chat/ e execute o docker-compose.yml
+### Agora va ate a pasta /var/www/rocket.chat/ e execute o docker-compose.yml
 
 ```
 docker-compose up -d
