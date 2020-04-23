@@ -1,0 +1,69 @@
+I"/<p><img src="https://user-images.githubusercontent.com/46201054/56322970-d7553e80-6140-11e9-8c80-50ed7f5fc6ff.png" alt="nfe-icn" /></p>
+
+<p>Neste post vou mostrar como utilizar o bot telegram que desenvolvi para poder capturar o status atual da sefaz, para ter de forma rapida e na mão o status da Sefaz quando for necessário.</p>
+
+<p>Para rodar o scrip como serviço em seu servidor siga os passos abaixo:</p>
+
+<ul>
+  <li>Instale o jq e o lynx:</li>
+</ul>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>apt-get <span class="nb">install </span>jq <span class="nt">-y</span>
+
+apt-get <span class="nb">install </span>lynx <span class="nt">-y</span>
+</code></pre></div></div>
+
+<ul>
+  <li>Clone o repositório:</li>
+</ul>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git clone https://github.com/WesllenMatias/sefaz.git
+</code></pre></div></div>
+<ul>
+  <li>Abra o sefaz.sh e altere a variavel bot_token e adicione o token do seu bot telegram:</li>
+</ul>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">bot_token</span><span class="o">=</span><span class="s1">'[add aqui o token do seu bot]'</span>
+</code></pre></div></div>
+<ul>
+  <li>Acesse a pasta sefaz e dê permissão de execução aos arquivos ShellBot.sh e sefaz.sh:</li>
+</ul>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">chmod</span> +x sefaz.sh
+
+<span class="nb">chmod</span> +x ShellBot.sh
+</code></pre></div></div>
+
+<ul>
+  <li>Para deixar o bot rodando como servico dentro de sua maquina execute os passos abaixo:</li>
+</ul>
+
+<p>Crie o arquivo sefaz.service dentro de /etc/systemd/system/</p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">[</span><span class="n">Unit</span><span class="p">]</span>
+<span class="n">Description</span><span class="o">=</span><span class="n">Sefaz</span>
+
+<span class="p">[</span><span class="n">Service</span><span class="p">]</span>
+<span class="n">Type</span><span class="o">=</span><span class="n">simple</span>
+<span class="n">RemainAfterExit</span><span class="o">=</span><span class="n">yes</span>
+<span class="n">ExecStart</span><span class="o">=/</span><span class="n">local</span><span class="o">/</span><span class="k">do</span><span class="o">/</span><span class="n">sefaz</span><span class="p">.</span><span class="n">sh</span> <span class="n">start</span>
+<span class="n">ExecStop</span><span class="o">=/</span><span class="n">local</span><span class="o">/</span><span class="k">do</span><span class="o">/</span><span class="n">sefaz</span><span class="o">/</span><span class="n">sefaz</span><span class="p">.</span><span class="n">sh</span> <span class="n">stop</span>
+<span class="n">ExecReload</span><span class="o">=/</span><span class="n">local</span><span class="o">/</span><span class="k">do</span><span class="o">/</span><span class="n">sefaz</span><span class="o">/</span><span class="n">sefaz</span><span class="p">.</span><span class="n">sh</span> <span class="n">restart</span>
+
+<span class="p">[</span><span class="n">Install</span><span class="p">]</span>
+<span class="n">WantedBy</span><span class="o">=</span><span class="n">multi</span><span class="o">-</span><span class="n">user</span><span class="p">.</span><span class="n">target</span>
+</code></pre></div></div>
+<ul>
+  <li>Execute os comandos abaixo:</li>
+</ul>
+
+<pre><code class="language-shellscript">
+systemctl daemon-reload
+systemctl enable sefaz
+</code></pre>
+
+<p><em>OBS: Dentro do Fonte <strong>sefaz.sh</strong> em source coloque o caminho absoluto de onde fica o ShellBot.sh</em></p>
+
+<h2 id="resultado">Resultado:</h2>
+<p><img src="/assets/img/tela-sefaz.png" alt="Mensagem do Bot" /></p>
+:ET

@@ -1,0 +1,110 @@
+I"�1<p>Rocket Chat no Docker.</p>
+
+<ul>
+  <li>Para rodar esse docker compose deve ser feita a instalacao do NGNIX e configurado com um certificado digital, assim como manda a documentacao, para evitar confusao (como eu mesmo me confundi no inicio), tomei a liberdade de nao incluir a configuracao de um firewall e do FailtoBan como foi feito na documentacao original ( logico que para fins de teste apenas, em producao deve ser adotado o metodo da documentacao pois e mais seguro ).</li>
+</ul>
+
+<h2 id="etapas-da-configuracao">Etapas da configuracao:</h2>
+
+<h3 id="criar-certificado-digital-ssl">Criar certificado digital SSL.</h3>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">touch</span> /etc/ngnix/certificate.key
+
+<span class="nb">touch</span> /etc/ngnix/certificate.crt
+
+<span class="nb">sudo </span>openssl req <span class="nt">-x509</span> <span class="nt">-nodes</span> <span class="nt">-days</span> 365 <span class="nt">-newkey</span> rsa:2048 <span class="nt">-keyout</span> /etc/nginx/certificate.key <span class="nt">-out</span> /etc/nginx/certificate.crt
+</code></pre></div></div>
+
+<h3 id="instalar-servidor-ngnix">Instalar servidor ngnix.</h3>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>apt-get <span class="nb">install </span>nginx
+</code></pre></div></div>
+
+<h3 id="clonar-o-repositorio-com-docker-composeyml-obspara-dentro-da-pasta-varwww-isso-é-importante">Clonar o repositorio com docker-compose.yml OBS:(para dentro da pasta /var/www/ isso é importante).</h3>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">cd</span> /var/www/
+
+git clone https://github.com/WesllenMatias/rocket.chat.git
+</code></pre></div></div>
+
+<h3 id="instalar-o-docker">Instalar o docker.</h3>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>wget <span class="nt">-qO-</span> https://get.docker.com/ | sh
+</code></pre></div></div>
+
+<h3 id="instalar-o-docker-compose-e-dar-permissao-de-execucao-a-ele">Instalar o docker-compose e dar permissao de execucao a ele.</h3>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>curl <span class="nt">-L</span> <span class="s2">"https://github.com/docker/compose/releases/download/1.25.4/docker-compose-</span><span class="si">$(</span><span class="nb">uname</span> <span class="nt">-s</span><span class="si">)</span><span class="s2">-</span><span class="si">$(</span><span class="nb">uname</span> <span class="nt">-m</span><span class="si">)</span><span class="s2">"</span> <span class="nt">-o</span> /usr/local/bin/docker-compose
+
+<span class="nb">sudo chmod</span> +x /usr/local/bin/docker-compose
+</code></pre></div></div>
+
+<h2 id="configurar-ngnix-com-o-certificado">Configurar ngnix com o certificado.</h2>
+
+<h3 id="altere-a-permissao-do-arquivo-do-certificado">Altere a permissao do arquivo do certificado.</h3>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo chmod </span>400 /etc/nginx/certificate.key
+
+<span class="nb">sudo </span>openssl dhparam <span class="nt">-out</span> /etc/nginx/dhparams.pem 2048
+</code></pre></div></div>
+
+<h3 id="agora-abra-o-arquivo-de-configuracao-do-ngnix-obs-altere-o-server_name-e-o-proxy_pass-com-o-dns-de-sua-preferencia-">Agora abra o arquivo de configuracao do NGNIX.( OBS? Altere o server_name e o proxy_pass com o DNS de sua preferencia )</h3>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>nano /etc/nginx/sites-available/default
+</code></pre></div></div>
+
+<h3 id="apague-as-configuracoes-atuais-e-cole-as-abaixo">Apague as configuracoes atuais e cole as abaixo.</h3>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="w">    </span><span class="err">server</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="err">listen</span><span class="w"> </span><span class="mi">443</span><span class="w"> </span><span class="err">ssl;</span><span class="w">
+        </span><span class="err">server_name</span><span class="w"> </span><span class="err">rocket.chat;</span><span class="w">
+
+        </span><span class="err">error_log</span><span class="w"> </span><span class="err">/var/log/nginx/rocketchat_error.log;</span><span class="w">
+
+        </span><span class="err">ssl_certificate</span><span class="w"> </span><span class="err">/etc/nginx/certificate.crt;</span><span class="w">
+        </span><span class="err">ssl_certificate_key</span><span class="w"> </span><span class="err">/etc/nginx/certificate.key;</span><span class="w">
+        </span><span class="err">ssl_dhparam</span><span class="w"> </span><span class="err">/etc/nginx/dhparams.pem;</span><span class="w">
+        </span><span class="err">ssl_protocols</span><span class="w"> </span><span class="err">TLSv</span><span class="mi">1</span><span class="w"> </span><span class="err">TLSv</span><span class="mf">1.1</span><span class="w"> </span><span class="err">TLSv</span><span class="mf">1.2</span><span class="err">;</span><span class="w">
+        </span><span class="err">ssl_ciphers</span><span class="w"> </span><span class="err">'ECDHE-RSA-AES</span><span class="mi">128</span><span class="err">-GCM-SHA</span><span class="mi">256</span><span class="err">:ECDHE-ECDSA-AES</span><span class="mi">128</span><span class="err">-GCM-SHA</span><span class="mi">256</span><span class="err">:ECDHE-RSA-AES</span><span class="mi">256</span><span class="err">-GCM-SHA</span><span class="mi">384</span><span class="err">:ECDHE-ECDSA-AES</span><span class="mi">256</span><span class="err">-GCM-SHA</span><span class="mi">384</span><span class="err">:DHE-RSA-AES</span><span class="mi">128</span><span class="err">-GCM-SHA</span><span class="mi">256</span><span class="err">:DHE-DSS-AES</span><span class="mi">128</span><span class="err">-GCM-SHA</span><span class="mi">256</span><span class="err">:kEDH+AESGCM:ECDHE-RSA-AES</span><span class="mi">128</span><span class="err">-SHA</span><span class="mi">256</span><span class="err">:ECDHE-ECDSA-AES</span><span class="mi">128</span><span class="err">-SHA</span><span class="mi">256</span><span class="err">:ECDHE-RSA-AES</span><span class="mi">128</span><span class="err">-SHA:ECDHE-ECDSA-AES</span><span class="mi">128</span><span class="err">-SHA:ECDHE-RSA-AES</span><span class="mi">256</span><span class="err">-SHA</span><span class="mi">384</span><span class="err">:ECDHE-ECDSA-AES</span><span class="mi">256</span><span class="err">-SHA</span><span class="mi">384</span><span class="err">:ECDHE-RSA-AES</span><span class="mi">256</span><span class="err">-SHA:ECDHE-ECDSA-AES</span><span class="mi">256</span><span class="err">-SHA:DHE-RSA-AES</span><span class="mi">128</span><span class="err">-SHA</span><span class="mi">256</span><span class="err">:DHE-RSA-AES</span><span class="mi">128</span><span class="err">-SHA:DHE-DSS-AES</span><span class="mi">128</span><span class="err">-SHA</span><span class="mi">256</span><span class="err">:DHE-RSA-AES</span><span class="mi">256</span><span class="err">-SHA</span><span class="mi">256</span><span class="err">:DHE-DSS-AES</span><span class="mi">256</span><span class="err">-SHA:DHE-RSA-AES</span><span class="mi">256</span><span class="err">-SHA:AES</span><span class="mi">128</span><span class="err">-GCM-SHA</span><span class="mi">256</span><span class="err">:AES</span><span class="mi">256</span><span class="err">-GCM-SHA</span><span class="mi">384</span><span class="err">:AES</span><span class="mi">128</span><span class="err">-SHA</span><span class="mi">256</span><span class="err">:AES</span><span class="mi">256</span><span class="err">-SHA</span><span class="mi">256</span><span class="err">:AES</span><span class="mi">128</span><span class="err">-SHA:AES</span><span class="mi">256</span><span class="err">-SHA:AES:CAMELLIA:DES-CBC</span><span class="mi">3</span><span class="err">-SHA:!aNULL:!eNULL:!EXPORT:!DES:!RC</span><span class="mi">4</span><span class="err">:!MD</span><span class="mi">5</span><span class="err">:!PSK:!aECDH:!EDH-DSS-DES-CBC</span><span class="mi">3</span><span class="err">-SHA:!EDH-RSA-DES-CBC</span><span class="mi">3</span><span class="err">-SHA:!KRB</span><span class="mi">5</span><span class="err">-DES-CBC</span><span class="mi">3</span><span class="err">-SHA';</span><span class="w">
+        </span><span class="err">ssl_prefer_server_ciphers</span><span class="w"> </span><span class="err">on;</span><span class="w">
+        </span><span class="err">ssl_session_cache</span><span class="w"> </span><span class="err">shared:SSL:</span><span class="mi">20</span><span class="err">m;</span><span class="w">
+        </span><span class="err">ssl_session_timeout</span><span class="w"> </span><span class="mi">180</span><span class="err">m;</span><span class="w">
+
+        </span><span class="err">location</span><span class="w"> </span><span class="err">/</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="err">proxy_pass</span><span class="w"> </span><span class="err">http://rocket.chat:</span><span class="mi">3000</span><span class="err">/;</span><span class="w">
+            </span><span class="err">proxy_http_version</span><span class="w"> </span><span class="mf">1.1</span><span class="err">;</span><span class="w">
+            </span><span class="err">proxy_set_header</span><span class="w"> </span><span class="err">Upgrade</span><span class="w"> </span><span class="err">$http_upgrade;</span><span class="w">
+            </span><span class="err">proxy_set_header</span><span class="w"> </span><span class="err">Connection</span><span class="w"> </span><span class="s2">"upgrade"</span><span class="err">;</span><span class="w">
+            </span><span class="err">proxy_set_header</span><span class="w"> </span><span class="err">Host</span><span class="w"> </span><span class="err">$http_host;</span><span class="w">
+            </span><span class="err">proxy_set_header</span><span class="w"> </span><span class="err">X-Real-IP</span><span class="w"> </span><span class="err">$remote_addr;</span><span class="w">
+            </span><span class="err">proxy_set_header</span><span class="w"> </span><span class="err">X-Forward-For</span><span class="w"> </span><span class="err">$proxy_add_x_forwarded_for;</span><span class="w">
+            </span><span class="err">proxy_set_header</span><span class="w"> </span><span class="err">X-Forward-Proto</span><span class="w"> </span><span class="err">http;</span><span class="w">
+            </span><span class="err">proxy_set_header</span><span class="w"> </span><span class="err">X-Nginx-Proxy</span><span class="w"> </span><span class="kc">true</span><span class="err">;</span><span class="w">
+            </span><span class="err">proxy_redirect</span><span class="w"> </span><span class="err">off;</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h3 id="reinicie-o-ngnix">Reinicie o NGNIX.</h3>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo service nginx configtest &amp;&amp; sudo service nginx restart
+</code></pre></div></div>
+
+<h3 id="crie-as-pastas-onde-vão-ficar-os-volumes-dos-containers">Crie as pastas onde vão ficar os volumes dos containers.</h3>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo mkdir -p /var/www/rocket.chat/data/runtime/db
+sudo mkdir -p /var/www/rocket.chat/data/dump
+</code></pre></div></div>
+
+<h3 id="agora-va-ate-a-pasta-varwwwrocketchat-e-execute-o-docker-composeyml">Agora va ate a pasta /var/www/rocket.chat/ e execute o docker-compose.yml</h3>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker-compose up -d
+
+</code></pre></div></div>
+
+<h2 id="documentacao-original">Documentacao Original:</h2>
+<h3 id="httpsrocketchatdocsinstallationdocker-containersindexhtml">https://rocket.chat/docs/installation/docker-containers/index.html</h3>
+
+<h2 id="dicas">Dicas:</h2>
+<p>Para um ambiente de teste agil, creio que seja mais produtivo usar o Vagrant e subir uma VM ubuntu com o docker ja instalado, estarei providenciando na sequencia o arquivo Vagrantfile para facilitar o ambiente de teste, afinal configurar VM step-by-step realmente torna o teste um martirio.</p>
+:ET
