@@ -1,0 +1,49 @@
+I"j<h1 id="bottelegram-downdetector">BotTelegram Downdetector</h1>
+
+<p>Passo a Passo para usar o Bot:</p>
+
+<h2 id="instalando-dependências">Instalando dependências</h2>
+
+<p><strong>São utilizadas algumas bibliotecas  que precisam ser instaladas:</strong></p>
+
+<ul>
+  <li>Selenium</li>
+  <li>pyTelegramBotAPI</li>
+  <li>BeautifulSoup</li>
+</ul>
+
+<p><strong>-OBS: O python utilizado é o Python3</strong></p>
+
+<pre><code class="language-shellscript">
+pip3 install selenium
+
+pip3 install pyTelegramBotAPI
+
+pip3 install bs4
+
+</code></pre>
+
+<h2 id="clone-o-repositório">Clone o Repositório</h2>
+
+<pre><code class="language-shellscript">
+git clone https://github.com/WesllenMatias/downdetector-telegram.git
+
+</code></pre>
+<h2 id="crie-o-arquivo-chamado-configpy-com-o-token-e-o-id-de-quem-vai-receber-a-mensagem">Crie o arquivo chamado config.py com o Token e o ID de quem vai receber a mensagem:</h2>
+
+<pre><code class="language-Python">
+TOKEN = "Informe o Token do seu bot aqui"
+
+</code></pre>
+
+<h2 id="execute-o-bot-e-deixe-ele-rodando-em-sua-instancia">Execute o Bot e deixe ele rodando em sua instancia</h2>
+
+<pre><code class="language-shellscript">python3 downdetector.py
+</code></pre>
+
+<p><strong>Pronto basta ir em seu bot no telegram e digitar /foradoar</strong></p>
+
+<h2 id="resultado">Resultado:</h2>
+
+<p><img src="/assets/img/bot-downdetector.png" alt="bot-downdetector" /></p>
+:ET
